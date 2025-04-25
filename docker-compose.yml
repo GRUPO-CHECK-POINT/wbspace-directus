@@ -1,0 +1,35 @@
+services:
+  init-db:
+    image: postgres:15
+    environment:
+      PGPASSWORD: ${DB_PASSWORD}
+    entrypoint: >
+      bash -c "
+        echo 'Esperando conexión con la DB...';
+        until pg_isready -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER}; do
+          sleep 1;
+        done;
+        echo 'Conectado. Ejecutando script...';
+        psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_DATABASE} -f /base-directus.sql
+      "
+    volumes:
+      - ./base-directus.sql:/base-directus.sql
+    restart: "no"
+  directus:
+    image: directus/directus:11.5.1
+    ports:
+      - 8055:8055
+    volumes:
+      - ./uploads:/directus/uploads
+      - ./extensions:/directus/extensions
+    environment:
+      SECRET: ${SECRET}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      DB_CLIENT: ${DB_CLIENT}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      WEBSOCKETS_ENABLED: "true"
