@@ -809,6 +809,91 @@ ALTER SEQUENCE public.directus_webhooks_id_seq OWNED BY public.directus_webhooks
 
 
 --
+-- Name: organization; Type: TABLE; Schema: public; Owner: admin
+--
+
+CREATE TABLE public.organization (
+    id uuid NOT NULL,
+    date_created timestamp with time zone,
+    name character varying(255) DEFAULT NULL::character varying
+);
+
+
+ALTER TABLE public.organization OWNER TO admin;
+
+--
+-- Name: page_info; Type: TABLE; Schema: public; Owner: admin
+--
+
+CREATE TABLE public.page_info (
+    id uuid NOT NULL,
+    favicon uuid,
+    email character varying(255),
+    contact_phone character varying(255),
+    organization_id uuid,
+    contact_address character varying(255),
+    site_title character varying(255),
+    logo_light uuid,
+    logo_dark uuid
+);
+
+
+ALTER TABLE public.page_info OWNER TO admin;
+
+--
+-- Name: page_metadata; Type: TABLE; Schema: public; Owner: admin
+--
+
+CREATE TABLE public.page_metadata (
+    id uuid NOT NULL,
+    meta_key character varying(255),
+    meta_value character varying(255),
+    page_id integer
+);
+
+
+ALTER TABLE public.page_metadata OWNER TO admin;
+
+--
+-- Name: pages; Type: TABLE; Schema: public; Owner: admin
+--
+
+CREATE TABLE public.pages (
+    id integer NOT NULL,
+    date_created timestamp with time zone,
+    user_updated uuid,
+    date_updated timestamp with time zone,
+    title character varying(255),
+    slug character varying(255),
+    organization_id uuid
+);
+
+
+ALTER TABLE public.pages OWNER TO admin;
+
+--
+-- Name: pages_id_seq; Type: SEQUENCE; Schema: public; Owner: admin
+--
+
+CREATE SEQUENCE public.pages_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.pages_id_seq OWNER TO admin;
+
+--
+-- Name: pages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: admin
+--
+
+ALTER SEQUENCE public.pages_id_seq OWNED BY public.pages.id;
+
+
+--
 -- Name: directus_activity id; Type: DEFAULT; Schema: public; Owner: admin
 --
 
@@ -872,21 +957,72 @@ ALTER TABLE ONLY public.directus_webhooks ALTER COLUMN id SET DEFAULT nextval('p
 
 
 --
+-- Name: pages id; Type: DEFAULT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.pages ALTER COLUMN id SET DEFAULT nextval('public.pages_id_seq'::regclass);
+
+
+--
 -- Data for Name: directus_access; Type: TABLE DATA; Schema: public; Owner: admin
 --
 
 COPY public.directus_access (id, role, "user", policy, sort) FROM stdin;
-1eabcd98-edd8-495e-9420-2e14f5d151cd	\N	\N	abf8a154-5b1c-4a46-ac9c-7300570f4f17	1
 c05b66ca-ba36-4b69-9579-e38578fbabff	1fc079ba-a8ab-4076-a89e-350390bba678	\N	6d2e8cb8-a1d3-4ff0-97ff-0de610613d8e	\N
+1eabcd98-edd8-495e-9420-2e14f5d151cd	\N	\N	abf8a154-5b1c-4a46-ac9c-7300570f4f17	1
 \.
 
 
---
--- Data for Name: directus_activity; Type: TABLE DATA; Schema: public; Owner: admin
---
+-- --
+-- -- Data for Name: directus_activity; Type: TABLE DATA; Schema: public; Owner: admin
+-- --
 
-COPY public.directus_activity (id, action, "user", "timestamp", ip, user_agent, collection, item, origin) FROM stdin;
-\.
+-- COPY public.directus_activity (id, action, "user", "timestamp", ip, user_agent, collection, item, origin) FROM stdin;
+-- 1	login	b7391416-e158-4593-b532-c9a345546025	2025-04-28 22:34:15.63+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	directus_users	b7391416-e158-4593-b532-c9a345546025	http://localhost:8055
+-- 2	create	b7391416-e158-4593-b532-c9a345546025	2025-04-28 22:45:16.866+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	directus_fields	1	http://localhost:8055
+-- 3	create	b7391416-e158-4593-b532-c9a345546025	2025-04-28 22:45:16.882+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	directus_fields	2	http://localhost:8055
+-- 4	create	b7391416-e158-4593-b532-c9a345546025	2025-04-28 22:45:16.895+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	directus_collections	organization	http://localhost:8055
+-- 5	create	b7391416-e158-4593-b532-c9a345546025	2025-04-28 22:45:34.721+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	directus_fields	3	http://localhost:8055
+-- 6	update	b7391416-e158-4593-b532-c9a345546025	2025-04-28 22:45:37.772+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	directus_fields	1	http://localhost:8055
+-- 7	update	b7391416-e158-4593-b532-c9a345546025	2025-04-28 22:45:37.797+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	directus_fields	3	http://localhost:8055
+-- 8	update	b7391416-e158-4593-b532-c9a345546025	2025-04-28 22:45:37.82+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	directus_fields	2	http://localhost:8055
+-- 9	create	b7391416-e158-4593-b532-c9a345546025	2025-04-28 22:46:32.537+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	directus_fields	4	http://localhost:8055
+-- 10	create	b7391416-e158-4593-b532-c9a345546025	2025-04-28 22:46:32.55+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	directus_fields	5	http://localhost:8055
+-- 11	create	b7391416-e158-4593-b532-c9a345546025	2025-04-28 22:46:32.563+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	directus_fields	6	http://localhost:8055
+-- 12	create	b7391416-e158-4593-b532-c9a345546025	2025-04-28 22:46:32.574+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	directus_fields	7	http://localhost:8055
+-- 13	create	b7391416-e158-4593-b532-c9a345546025	2025-04-28 22:46:32.585+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	directus_collections	pages	http://localhost:8055
+-- 14	create	b7391416-e158-4593-b532-c9a345546025	2025-04-28 22:46:40.157+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	directus_fields	8	http://localhost:8055
+-- 15	update	b7391416-e158-4593-b532-c9a345546025	2025-04-28 22:46:48.592+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	directus_fields	8	http://localhost:8055
+-- 16	create	b7391416-e158-4593-b532-c9a345546025	2025-04-28 22:46:59.861+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	directus_fields	9	http://localhost:8055
+-- 17	create	b7391416-e158-4593-b532-c9a345546025	2025-04-28 22:47:23.697+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	directus_fields	10	http://localhost:8055
+-- 18	create	b7391416-e158-4593-b532-c9a345546025	2025-04-28 22:48:11.585+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	directus_fields	11	http://localhost:8055
+-- 19	create	b7391416-e158-4593-b532-c9a345546025	2025-04-28 22:48:11.598+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	directus_collections	page_metadata	http://localhost:8055
+-- 20	create	b7391416-e158-4593-b532-c9a345546025	2025-04-28 22:48:19.5+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	directus_fields	12	http://localhost:8055
+-- 21	create	b7391416-e158-4593-b532-c9a345546025	2025-04-28 22:48:27.986+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	directus_fields	13	http://localhost:8055
+-- 22	create	b7391416-e158-4593-b532-c9a345546025	2025-04-28 22:49:00.501+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	directus_fields	14	http://localhost:8055
+-- 23	create	b7391416-e158-4593-b532-c9a345546025	2025-04-28 22:49:00.633+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	directus_fields	15	http://localhost:8055
+-- 24	create	b7391416-e158-4593-b532-c9a345546025	2025-04-28 22:49:45.093+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	directus_fields	16	http://localhost:8055
+-- 25	create	b7391416-e158-4593-b532-c9a345546025	2025-04-28 22:49:45.105+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	directus_collections	page_info	http://localhost:8055
+-- 26	create	b7391416-e158-4593-b532-c9a345546025	2025-04-28 22:49:54.105+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	directus_fields	17	http://localhost:8055
+-- 27	create	b7391416-e158-4593-b532-c9a345546025	2025-04-28 22:50:01.59+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	directus_fields	18	http://localhost:8055
+-- 28	create	b7391416-e158-4593-b532-c9a345546025	2025-04-28 22:50:08.476+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	directus_fields	19	http://localhost:8055
+-- 29	create	b7391416-e158-4593-b532-c9a345546025	2025-04-28 22:50:33.962+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	directus_fields	20	http://localhost:8055
+-- 30	update	b7391416-e158-4593-b532-c9a345546025	2025-04-28 22:50:45.892+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	directus_fields	20	http://localhost:8055
+-- 31	create	b7391416-e158-4593-b532-c9a345546025	2025-04-28 22:51:10.646+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	directus_fields	21	http://localhost:8055
+-- 32	create	b7391416-e158-4593-b532-c9a345546025	2025-04-28 22:51:19.715+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	directus_fields	22	http://localhost:8055
+-- 33	create	b7391416-e158-4593-b532-c9a345546025	2025-04-28 22:51:59.262+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	directus_fields	23	http://localhost:8055
+-- 34	create	b7391416-e158-4593-b532-c9a345546025	2025-04-28 22:52:13.702+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	directus_fields	24	http://localhost:8055
+-- 35	create	b7391416-e158-4593-b532-c9a345546025	2025-04-28 23:00:10.814+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	directus_permissions	1	http://localhost:8055
+-- 36	create	b7391416-e158-4593-b532-c9a345546025	2025-04-28 23:00:10.828+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	directus_permissions	2	http://localhost:8055
+-- 37	create	b7391416-e158-4593-b532-c9a345546025	2025-04-28 23:00:10.839+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	directus_permissions	3	http://localhost:8055
+-- 38	create	b7391416-e158-4593-b532-c9a345546025	2025-04-28 23:00:10.85+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	directus_permissions	4	http://localhost:8055
+-- 39	update	b7391416-e158-4593-b532-c9a345546025	2025-04-28 23:00:10.861+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	directus_policies	abf8a154-5b1c-4a46-ac9c-7300570f4f17	http://localhost:8055
+-- 40	update	b7391416-e158-4593-b532-c9a345546025	2025-04-28 23:00:10.881+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	directus_access	1eabcd98-edd8-495e-9420-2e14f5d151cd	http://localhost:8055
+-- 41	create	b7391416-e158-4593-b532-c9a345546025	2025-04-28 23:00:40.918+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	organization	1235e979-751f-4e58-85b1-b59cce923bba	http://localhost:8055
+-- 42	create	b7391416-e158-4593-b532-c9a345546025	2025-04-28 23:00:55.631+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	pages	1	http://localhost:8055
+-- 43	create	b7391416-e158-4593-b532-c9a345546025	2025-04-28 23:02:29.427+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	page_info	7508e507-a03c-4c0a-a669-db1e47b8e455	http://localhost:8055
+-- 44	update	b7391416-e158-4593-b532-c9a345546025	2025-04-28 23:09:02.318+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	directus_fields	1	http://localhost:8055
+-- \.
 
 
 --
@@ -894,6 +1030,10 @@ COPY public.directus_activity (id, action, "user", "timestamp", ip, user_agent, 
 --
 
 COPY public.directus_collections (collection, icon, note, display_template, hidden, singleton, translations, archive_field, archive_app_filter, archive_value, unarchive_value, sort_field, accountability, color, item_duplication_fields, sort, "group", collapse, preview_url, versioning) FROM stdin;
+organization	\N	\N	\N	f	f	\N	\N	t	\N	\N	\N	all	\N	\N	\N	\N	open	\N	f
+pages	\N	\N	\N	f	f	\N	\N	t	\N	\N	\N	all	\N	\N	\N	\N	open	\N	f
+page_metadata	\N	\N	\N	f	f	\N	\N	t	\N	\N	\N	all	\N	\N	\N	\N	open	\N	f
+page_info	\N	\N	\N	f	f	\N	\N	t	\N	\N	\N	all	\N	\N	\N	\N	open	\N	f
 \.
 
 
@@ -917,9 +1057,9 @@ COPY public.directus_dashboards (id, name, icon, note, date_created, user_create
 -- Data for Name: directus_extensions; Type: TABLE DATA; Schema: public; Owner: admin
 --
 
-COPY public.directus_extensions (enabled, id, folder, source, bundle) FROM stdin;
-t	62956f33-7c99-4d5b-ba51-49e81a192838	endpoint-test	local	\N
-\.
+-- COPY public.directus_extensions (enabled, id, folder, source, bundle) FROM stdin;
+-- t	62956f33-7c99-4d5b-ba51-49e81a192838	endpoint-test	local	\N
+-- \.
 
 
 --
@@ -927,6 +1067,30 @@ t	62956f33-7c99-4d5b-ba51-49e81a192838	endpoint-test	local	\N
 --
 
 COPY public.directus_fields (id, collection, field, special, interface, options, display, display_options, readonly, hidden, sort, width, translations, note, conditions, required, "group", validation, validation_message) FROM stdin;
+3	organization	name	\N	input	\N	\N	\N	f	f	2	full	\N	\N	\N	t	\N	\N	\N
+2	organization	date_created	date-created	datetime	\N	datetime	{"relative":true}	t	t	3	half	\N	\N	\N	f	\N	\N	\N
+4	pages	id	\N	input	\N	\N	\N	t	t	1	full	\N	\N	\N	f	\N	\N	\N
+5	pages	date_created	date-created	datetime	\N	datetime	{"relative":true}	t	t	2	half	\N	\N	\N	f	\N	\N	\N
+6	pages	user_updated	user-updated	select-dropdown-m2o	{"template":"{{avatar}} {{first_name}} {{last_name}}"}	user	\N	t	t	3	half	\N	\N	\N	f	\N	\N	\N
+7	pages	date_updated	date-updated	datetime	\N	datetime	{"relative":true}	t	t	4	half	\N	\N	\N	f	\N	\N	\N
+8	pages	title	\N	input	\N	\N	\N	f	f	5	full	\N	\N	\N	t	\N	\N	\N
+9	pages	slug	\N	input	\N	\N	\N	f	f	6	full	\N	\N	\N	t	\N	\N	\N
+10	pages	organization_id	m2o	select-dropdown-m2o	\N	\N	\N	f	f	7	full	\N	\N	\N	t	\N	\N	\N
+11	page_metadata	id	uuid	input	\N	\N	\N	t	t	1	full	\N	\N	\N	f	\N	\N	\N
+12	page_metadata	meta_key	\N	input	\N	\N	\N	f	f	2	full	\N	\N	\N	t	\N	\N	\N
+13	page_metadata	meta_value	\N	input	\N	\N	\N	f	f	3	full	\N	\N	\N	t	\N	\N	\N
+14	page_metadata	page_id	m2o	\N	\N	\N	\N	f	f	4	full	\N	\N	\N	t	\N	\N	\N
+15	pages	page_metadata	o2m	list-o2m	\N	\N	\N	f	f	8	full	\N	\N	\N	f	\N	\N	\N
+16	page_info	id	uuid	input	\N	\N	\N	t	t	1	full	\N	\N	\N	f	\N	\N	\N
+17	page_info	favicon	file	file-image	\N	\N	\N	f	f	2	full	\N	\N	\N	f	\N	\N	\N
+18	page_info	email	\N	input	\N	\N	\N	f	f	3	full	\N	\N	\N	f	\N	\N	\N
+19	page_info	contact_phone	\N	input	\N	\N	\N	f	f	4	full	\N	\N	\N	f	\N	\N	\N
+20	page_info	organization_id	m2o	select-dropdown-m2o	\N	\N	\N	f	f	5	full	\N	\N	\N	t	\N	\N	\N
+21	page_info	contact_address	\N	input	\N	\N	\N	f	f	6	full	\N	\N	\N	f	\N	\N	\N
+22	page_info	site_title	\N	input	\N	\N	\N	f	f	7	full	\N	\N	\N	f	\N	\N	\N
+23	page_info	logo_light	file	file-image	\N	\N	\N	f	f	8	full	\N	\N	\N	f	\N	\N	\N
+24	page_info	logo_dark	file	file-image	\N	\N	\N	f	f	9	full	\N	\N	\N	f	\N	\N	\N
+1	organization	id	uuid	input	\N	\N	\N	t	f	1	full	\N	\N	\N	f	\N	\N	\N
 \.
 
 
@@ -1077,6 +1241,10 @@ COPY public.directus_panels (id, dashboard, name, icon, color, show_header, note
 --
 
 COPY public.directus_permissions (id, collection, action, permissions, validation, presets, fields, policy) FROM stdin;
+1	organization	read	\N	\N	\N	*	abf8a154-5b1c-4a46-ac9c-7300570f4f17
+2	page_info	read	\N	\N	\N	*	abf8a154-5b1c-4a46-ac9c-7300570f4f17
+3	page_metadata	read	\N	\N	\N	*	abf8a154-5b1c-4a46-ac9c-7300570f4f17
+4	pages	read	\N	\N	\N	*	abf8a154-5b1c-4a46-ac9c-7300570f4f17
 \.
 
 
@@ -1103,6 +1271,13 @@ COPY public.directus_presets (id, bookmark, "user", role, collection, search, la
 --
 
 COPY public.directus_relations (id, many_collection, many_field, one_collection, one_field, one_collection_field, one_allowed_collections, junction_field, sort_field, one_deselect_action) FROM stdin;
+1	pages	user_updated	directus_users	\N	\N	\N	\N	\N	nullify
+2	pages	organization_id	organization	\N	\N	\N	\N	\N	nullify
+3	page_metadata	page_id	pages	page_metadata	\N	\N	\N	\N	nullify
+4	page_info	favicon	directus_files	\N	\N	\N	\N	\N	nullify
+5	page_info	organization_id	organization	\N	\N	\N	\N	\N	nullify
+6	page_info	logo_light	directus_files	\N	\N	\N	\N	\N	nullify
+7	page_info	logo_dark	directus_files	\N	\N	\N	\N	\N	nullify
 \.
 
 
@@ -1110,8 +1285,50 @@ COPY public.directus_relations (id, many_collection, many_field, one_collection,
 -- Data for Name: directus_revisions; Type: TABLE DATA; Schema: public; Owner: admin
 --
 
-COPY public.directus_revisions (id, activity, collection, item, data, delta, parent, version) FROM stdin;
-\.
+-- COPY public.directus_revisions (id, activity, collection, item, data, delta, parent, version) FROM stdin;
+-- 1	2	directus_fields	1	{"sort":1,"hidden":true,"readonly":true,"interface":"input","special":["uuid"],"field":"id","collection":"organization"}	{"sort":1,"hidden":true,"readonly":true,"interface":"input","special":["uuid"],"field":"id","collection":"organization"}	\N	\N
+-- 2	3	directus_fields	2	{"sort":2,"special":["date-created"],"interface":"datetime","readonly":true,"hidden":true,"width":"half","display":"datetime","display_options":{"relative":true},"field":"date_created","collection":"organization"}	{"sort":2,"special":["date-created"],"interface":"datetime","readonly":true,"hidden":true,"width":"half","display":"datetime","display_options":{"relative":true},"field":"date_created","collection":"organization"}	\N	\N
+-- 3	4	directus_collections	organization	{"singleton":false,"collection":"organization"}	{"singleton":false,"collection":"organization"}	\N	\N
+-- 4	5	directus_fields	3	{"sort":3,"interface":"input","special":null,"required":true,"collection":"organization","field":"name"}	{"sort":3,"interface":"input","special":null,"required":true,"collection":"organization","field":"name"}	\N	\N
+-- 5	6	directus_fields	1	{"id":1,"collection":"organization","field":"id","special":["uuid"],"interface":"input","options":null,"display":null,"display_options":null,"readonly":true,"hidden":true,"sort":1,"width":"full","translations":null,"note":null,"conditions":null,"required":false,"group":null,"validation":null,"validation_message":null}	{"collection":"organization","field":"id","sort":1,"group":null}	\N	\N
+-- 6	7	directus_fields	3	{"id":3,"collection":"organization","field":"name","special":null,"interface":"input","options":null,"display":null,"display_options":null,"readonly":false,"hidden":false,"sort":2,"width":"full","translations":null,"note":null,"conditions":null,"required":true,"group":null,"validation":null,"validation_message":null}	{"collection":"organization","field":"name","sort":2,"group":null}	\N	\N
+-- 7	8	directus_fields	2	{"id":2,"collection":"organization","field":"date_created","special":["date-created"],"interface":"datetime","options":null,"display":"datetime","display_options":{"relative":true},"readonly":true,"hidden":true,"sort":3,"width":"half","translations":null,"note":null,"conditions":null,"required":false,"group":null,"validation":null,"validation_message":null}	{"collection":"organization","field":"date_created","sort":3,"group":null}	\N	\N
+-- 8	9	directus_fields	4	{"sort":1,"hidden":true,"interface":"input","readonly":true,"field":"id","collection":"pages"}	{"sort":1,"hidden":true,"interface":"input","readonly":true,"field":"id","collection":"pages"}	\N	\N
+-- 9	10	directus_fields	5	{"sort":2,"special":["date-created"],"interface":"datetime","readonly":true,"hidden":true,"width":"half","display":"datetime","display_options":{"relative":true},"field":"date_created","collection":"pages"}	{"sort":2,"special":["date-created"],"interface":"datetime","readonly":true,"hidden":true,"width":"half","display":"datetime","display_options":{"relative":true},"field":"date_created","collection":"pages"}	\N	\N
+-- 10	11	directus_fields	6	{"sort":3,"special":["user-updated"],"interface":"select-dropdown-m2o","options":{"template":"{{avatar}} {{first_name}} {{last_name}}"},"display":"user","readonly":true,"hidden":true,"width":"half","field":"user_updated","collection":"pages"}	{"sort":3,"special":["user-updated"],"interface":"select-dropdown-m2o","options":{"template":"{{avatar}} {{first_name}} {{last_name}}"},"display":"user","readonly":true,"hidden":true,"width":"half","field":"user_updated","collection":"pages"}	\N	\N
+-- 11	12	directus_fields	7	{"sort":4,"special":["date-updated"],"interface":"datetime","readonly":true,"hidden":true,"width":"half","display":"datetime","display_options":{"relative":true},"field":"date_updated","collection":"pages"}	{"sort":4,"special":["date-updated"],"interface":"datetime","readonly":true,"hidden":true,"width":"half","display":"datetime","display_options":{"relative":true},"field":"date_updated","collection":"pages"}	\N	\N
+-- 12	13	directus_collections	pages	{"singleton":false,"collection":"pages"}	{"singleton":false,"collection":"pages"}	\N	\N
+-- 13	14	directus_fields	8	{"sort":5,"interface":"input","special":null,"collection":"pages","field":"title"}	{"sort":5,"interface":"input","special":null,"collection":"pages","field":"title"}	\N	\N
+-- 14	15	directus_fields	8	{"id":8,"collection":"pages","field":"title","special":null,"interface":"input","options":null,"display":null,"display_options":null,"readonly":false,"hidden":false,"sort":5,"width":"full","translations":null,"note":null,"conditions":null,"required":true,"group":null,"validation":null,"validation_message":null}	{"collection":"pages","field":"title","required":true}	\N	\N
+-- 15	16	directus_fields	9	{"sort":6,"interface":"input","special":null,"required":true,"collection":"pages","field":"slug"}	{"sort":6,"interface":"input","special":null,"required":true,"collection":"pages","field":"slug"}	\N	\N
+-- 16	17	directus_fields	10	{"sort":7,"interface":"select-dropdown-m2o","special":["m2o"],"required":true,"collection":"pages","field":"organization_id"}	{"sort":7,"interface":"select-dropdown-m2o","special":["m2o"],"required":true,"collection":"pages","field":"organization_id"}	\N	\N
+-- 17	18	directus_fields	11	{"sort":1,"hidden":true,"readonly":true,"interface":"input","special":["uuid"],"field":"id","collection":"page_metadata"}	{"sort":1,"hidden":true,"readonly":true,"interface":"input","special":["uuid"],"field":"id","collection":"page_metadata"}	\N	\N
+-- 18	19	directus_collections	page_metadata	{"singleton":false,"collection":"page_metadata"}	{"singleton":false,"collection":"page_metadata"}	\N	\N
+-- 19	20	directus_fields	12	{"sort":2,"interface":"input","special":null,"required":true,"collection":"page_metadata","field":"meta_key"}	{"sort":2,"interface":"input","special":null,"required":true,"collection":"page_metadata","field":"meta_key"}	\N	\N
+-- 20	21	directus_fields	13	{"sort":3,"interface":"input","special":null,"required":true,"collection":"page_metadata","field":"meta_value"}	{"sort":3,"interface":"input","special":null,"required":true,"collection":"page_metadata","field":"meta_value"}	\N	\N
+-- 21	22	directus_fields	14	{"sort":4,"special":["m2o"],"required":true,"collection":"page_metadata","field":"page_id"}	{"sort":4,"special":["m2o"],"required":true,"collection":"page_metadata","field":"page_id"}	\N	\N
+-- 22	23	directus_fields	15	{"sort":8,"special":["o2m"],"interface":"list-o2m","collection":"pages","field":"page_metadata"}	{"sort":8,"special":["o2m"],"interface":"list-o2m","collection":"pages","field":"page_metadata"}	\N	\N
+-- 23	24	directus_fields	16	{"sort":1,"hidden":true,"readonly":true,"interface":"input","special":["uuid"],"field":"id","collection":"page_info"}	{"sort":1,"hidden":true,"readonly":true,"interface":"input","special":["uuid"],"field":"id","collection":"page_info"}	\N	\N
+-- 24	25	directus_collections	page_info	{"singleton":false,"collection":"page_info"}	{"singleton":false,"collection":"page_info"}	\N	\N
+-- 25	26	directus_fields	17	{"sort":2,"interface":"file-image","special":["file"],"collection":"page_info","field":"favicon"}	{"sort":2,"interface":"file-image","special":["file"],"collection":"page_info","field":"favicon"}	\N	\N
+-- 26	27	directus_fields	18	{"sort":3,"interface":"input","special":null,"collection":"page_info","field":"email"}	{"sort":3,"interface":"input","special":null,"collection":"page_info","field":"email"}	\N	\N
+-- 27	28	directus_fields	19	{"sort":4,"interface":"input","special":null,"collection":"page_info","field":"contact_phone"}	{"sort":4,"interface":"input","special":null,"collection":"page_info","field":"contact_phone"}	\N	\N
+-- 28	29	directus_fields	20	{"sort":5,"interface":"select-dropdown-m2o","special":["m2o"],"collection":"page_info","field":"organization_id"}	{"sort":5,"interface":"select-dropdown-m2o","special":["m2o"],"collection":"page_info","field":"organization_id"}	\N	\N
+-- 29	30	directus_fields	20	{"id":20,"collection":"page_info","field":"organization_id","special":["m2o"],"interface":"select-dropdown-m2o","options":null,"display":null,"display_options":null,"readonly":false,"hidden":false,"sort":5,"width":"full","translations":null,"note":null,"conditions":null,"required":true,"group":null,"validation":null,"validation_message":null}	{"collection":"page_info","field":"organization_id","required":true}	\N	\N
+-- 30	31	directus_fields	21	{"sort":6,"interface":"input","special":null,"collection":"page_info","field":"contact_address"}	{"sort":6,"interface":"input","special":null,"collection":"page_info","field":"contact_address"}	\N	\N
+-- 31	32	directus_fields	22	{"sort":7,"interface":"input","special":null,"collection":"page_info","field":"site_title"}	{"sort":7,"interface":"input","special":null,"collection":"page_info","field":"site_title"}	\N	\N
+-- 32	33	directus_fields	23	{"sort":8,"interface":"file-image","special":["file"],"collection":"page_info","field":"logo_light"}	{"sort":8,"interface":"file-image","special":["file"],"collection":"page_info","field":"logo_light"}	\N	\N
+-- 33	34	directus_fields	24	{"sort":9,"interface":"file-image","special":["file"],"collection":"page_info","field":"logo_dark"}	{"sort":9,"interface":"file-image","special":["file"],"collection":"page_info","field":"logo_dark"}	\N	\N
+-- 34	35	directus_permissions	1	{"policy":"abf8a154-5b1c-4a46-ac9c-7300570f4f17","permissions":null,"validation":null,"fields":["*"],"presets":null,"collection":"organization","action":"read"}	{"policy":"abf8a154-5b1c-4a46-ac9c-7300570f4f17","permissions":null,"validation":null,"fields":["*"],"presets":null,"collection":"organization","action":"read"}	\N	\N
+-- 35	36	directus_permissions	2	{"policy":"abf8a154-5b1c-4a46-ac9c-7300570f4f17","permissions":null,"validation":null,"fields":["*"],"presets":null,"collection":"page_info","action":"read"}	{"policy":"abf8a154-5b1c-4a46-ac9c-7300570f4f17","permissions":null,"validation":null,"fields":["*"],"presets":null,"collection":"page_info","action":"read"}	\N	\N
+-- 36	37	directus_permissions	3	{"policy":"abf8a154-5b1c-4a46-ac9c-7300570f4f17","permissions":null,"validation":null,"fields":["*"],"presets":null,"collection":"page_metadata","action":"read"}	{"policy":"abf8a154-5b1c-4a46-ac9c-7300570f4f17","permissions":null,"validation":null,"fields":["*"],"presets":null,"collection":"page_metadata","action":"read"}	\N	\N
+-- 37	38	directus_permissions	4	{"policy":"abf8a154-5b1c-4a46-ac9c-7300570f4f17","permissions":null,"validation":null,"fields":["*"],"presets":null,"collection":"pages","action":"read"}	{"policy":"abf8a154-5b1c-4a46-ac9c-7300570f4f17","permissions":null,"validation":null,"fields":["*"],"presets":null,"collection":"pages","action":"read"}	\N	\N
+-- 38	40	directus_access	1eabcd98-edd8-495e-9420-2e14f5d151cd	{"id":"1eabcd98-edd8-495e-9420-2e14f5d151cd","role":null,"user":null,"policy":"abf8a154-5b1c-4a46-ac9c-7300570f4f17","sort":1}	{"policy":"abf8a154-5b1c-4a46-ac9c-7300570f4f17"}	\N	\N
+-- 39	41	organization	1235e979-751f-4e58-85b1-b59cce923bba	{"name":"Space Studio"}	{"name":"Space Studio"}	\N	\N
+-- 40	42	pages	1	{"title":"Index","slug":"index","organization_id":"1235e979-751f-4e58-85b1-b59cce923bba"}	{"title":"Index","slug":"index","organization_id":"1235e979-751f-4e58-85b1-b59cce923bba"}	\N	\N
+-- 41	43	page_info	7508e507-a03c-4c0a-a669-db1e47b8e455	{"organization_id":"1235e979-751f-4e58-85b1-b59cce923bba","email":"correo@correo.com","contact_phone":"999999999","site_title":"Space Studio","contact_address":"Av. avenidosa"}	{"organization_id":"1235e979-751f-4e58-85b1-b59cce923bba","email":"correo@correo.com","contact_phone":"999999999","site_title":"Space Studio","contact_address":"Av. avenidosa"}	\N	\N
+-- 42	44	directus_fields	1	{"id":1,"collection":"organization","field":"id","special":["uuid"],"interface":"input","options":null,"display":null,"display_options":null,"readonly":true,"hidden":false,"sort":1,"width":"full","translations":null,"note":null,"conditions":null,"required":false,"group":null,"validation":null,"validation_message":null}	{"collection":"organization","field":"id","hidden":false}	\N	\N
+-- \.
 
 
 --
@@ -1127,8 +1344,9 @@ COPY public.directus_roles (id, name, icon, description, parent) FROM stdin;
 -- Data for Name: directus_sessions; Type: TABLE DATA; Schema: public; Owner: admin
 --
 
-COPY public.directus_sessions (token, "user", expires, ip, user_agent, share, origin, next_token) FROM stdin;
-\.
+-- COPY public.directus_sessions (token, "user", expires, ip, user_agent, share, origin, next_token) FROM stdin;
+-- BIG5pir5hd8x-M2tFpnBC009GvSTrpkp2gWozw6d3ujH52f2Jp1kh_CCc_8WZZIP	b7391416-e158-4593-b532-c9a345546025	2025-05-05 22:34:15.611+00	172.18.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36	\N	http://localhost:8055	\N
+-- \.
 
 
 --
@@ -1160,7 +1378,7 @@ COPY public.directus_translations (id, language, key, value) FROM stdin;
 --
 
 COPY public.directus_users (id, first_name, last_name, email, password, location, title, description, tags, avatar, language, tfa_secret, status, role, token, last_access, last_page, provider, external_identifier, auth_data, email_notifications, appearance, theme_dark, theme_light, theme_light_overrides, theme_dark_overrides) FROM stdin;
-b7391416-e158-4593-b532-c9a345546025	Admin	User	admin@example.com	$argon2id$v=19$m=65536,t=3,p=4$OgOfq8wz0VaRPAUwSHg5jQ$66ar19jjSM8rQ73yGQU1PV4PZqCJavc6QkPORp6iNwM	\N	\N	\N	\N	\N	\N	\N	active	1fc079ba-a8ab-4076-a89e-350390bba678	\N	\N	\N	default	\N	\N	t	\N	\N	\N	\N	\N
+b7391416-e158-4593-b532-c9a345546025	Admin	User	admin@example.com	$argon2id$v=19$m=65536,t=3,p=4$OgOfq8wz0VaRPAUwSHg5jQ$66ar19jjSM8rQ73yGQU1PV4PZqCJavc6QkPORp6iNwM	\N	\N	\N	\N	\N	\N	\N	active	1fc079ba-a8ab-4076-a89e-350390bba678	\N	2025-04-28 22:34:15.642+00	/content/organization/1235e979-751f-4e58-85b1-b59cce923bba	default	\N	\N	t	\N	\N	\N	\N	\N
 \.
 
 
@@ -1181,17 +1399,52 @@ COPY public.directus_webhooks (id, name, method, url, status, data, actions, col
 
 
 --
+-- Data for Name: organization; Type: TABLE DATA; Schema: public; Owner: admin
+--
+
+COPY public.organization (id, date_created, name) FROM stdin;
+1235e979-751f-4e58-85b1-b59cce923bba	2025-04-28 23:00:40.915+00	Space Studio
+\.
+
+
+--
+-- Data for Name: page_info; Type: TABLE DATA; Schema: public; Owner: admin
+--
+
+COPY public.page_info (id, favicon, email, contact_phone, organization_id, contact_address, site_title, logo_light, logo_dark) FROM stdin;
+7508e507-a03c-4c0a-a669-db1e47b8e455	\N	correo@correo.com	999999999	1235e979-751f-4e58-85b1-b59cce923bba	Av. avenidosa	Space Studio	\N	\N
+\.
+
+
+--
+-- Data for Name: page_metadata; Type: TABLE DATA; Schema: public; Owner: admin
+--
+
+COPY public.page_metadata (id, meta_key, meta_value, page_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: pages; Type: TABLE DATA; Schema: public; Owner: admin
+--
+
+COPY public.pages (id, date_created, user_updated, date_updated, title, slug, organization_id) FROM stdin;
+1	2025-04-28 23:00:55.595+00	\N	\N	Index	index	1235e979-751f-4e58-85b1-b59cce923bba
+\.
+
+
+--
 -- Name: directus_activity_id_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public.directus_activity_id_seq', 1, false);
+SELECT pg_catalog.setval('public.directus_activity_id_seq', 44, true);
 
 
 --
 -- Name: directus_fields_id_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public.directus_fields_id_seq', 1, false);
+SELECT pg_catalog.setval('public.directus_fields_id_seq', 24, true);
 
 
 --
@@ -1205,7 +1458,7 @@ SELECT pg_catalog.setval('public.directus_notifications_id_seq', 1, false);
 -- Name: directus_permissions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public.directus_permissions_id_seq', 1, false);
+SELECT pg_catalog.setval('public.directus_permissions_id_seq', 4, true);
 
 
 --
@@ -1219,14 +1472,14 @@ SELECT pg_catalog.setval('public.directus_presets_id_seq', 1, false);
 -- Name: directus_relations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public.directus_relations_id_seq', 1, false);
+SELECT pg_catalog.setval('public.directus_relations_id_seq', 7, true);
 
 
 --
 -- Name: directus_revisions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public.directus_revisions_id_seq', 1, false);
+SELECT pg_catalog.setval('public.directus_revisions_id_seq', 42, true);
 
 
 --
@@ -1241,6 +1494,13 @@ SELECT pg_catalog.setval('public.directus_settings_id_seq', 1, false);
 --
 
 SELECT pg_catalog.setval('public.directus_webhooks_id_seq', 1, false);
+
+
+--
+-- Name: pages_id_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
+--
+
+SELECT pg_catalog.setval('public.pages_id_seq', 1, true);
 
 
 --
@@ -1505,6 +1765,46 @@ ALTER TABLE ONLY public.directus_versions
 
 ALTER TABLE ONLY public.directus_webhooks
     ADD CONSTRAINT directus_webhooks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: organization organization_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.organization
+    ADD CONSTRAINT organization_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: page_info page_info_organization_id_unique; Type: CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.page_info
+    ADD CONSTRAINT page_info_organization_id_unique UNIQUE (organization_id);
+
+
+--
+-- Name: page_info page_info_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.page_info
+    ADD CONSTRAINT page_info_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: page_metadata page_metadata_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.page_metadata
+    ADD CONSTRAINT page_metadata_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: pages pages_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.pages
+    ADD CONSTRAINT pages_pkey PRIMARY KEY (id);
 
 
 --
@@ -1849,6 +2149,62 @@ ALTER TABLE ONLY public.directus_versions
 
 ALTER TABLE ONLY public.directus_webhooks
     ADD CONSTRAINT directus_webhooks_migrated_flow_foreign FOREIGN KEY (migrated_flow) REFERENCES public.directus_flows(id) ON DELETE SET NULL;
+
+
+--
+-- Name: page_info page_info_favicon_foreign; Type: FK CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.page_info
+    ADD CONSTRAINT page_info_favicon_foreign FOREIGN KEY (favicon) REFERENCES public.directus_files(id) ON DELETE SET NULL;
+
+
+--
+-- Name: page_info page_info_logo_dark_foreign; Type: FK CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.page_info
+    ADD CONSTRAINT page_info_logo_dark_foreign FOREIGN KEY (logo_dark) REFERENCES public.directus_files(id) ON DELETE SET NULL;
+
+
+--
+-- Name: page_info page_info_logo_light_foreign; Type: FK CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.page_info
+    ADD CONSTRAINT page_info_logo_light_foreign FOREIGN KEY (logo_light) REFERENCES public.directus_files(id) ON DELETE SET NULL;
+
+
+--
+-- Name: page_info page_info_organization_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.page_info
+    ADD CONSTRAINT page_info_organization_id_foreign FOREIGN KEY (organization_id) REFERENCES public.organization(id) ON DELETE SET NULL;
+
+
+--
+-- Name: page_metadata page_metadata_page_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.page_metadata
+    ADD CONSTRAINT page_metadata_page_id_foreign FOREIGN KEY (page_id) REFERENCES public.pages(id) ON DELETE SET NULL;
+
+
+--
+-- Name: pages pages_organization_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.pages
+    ADD CONSTRAINT pages_organization_id_foreign FOREIGN KEY (organization_id) REFERENCES public.organization(id) ON DELETE SET NULL;
+
+
+--
+-- Name: pages pages_user_updated_foreign; Type: FK CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.pages
+    ADD CONSTRAINT pages_user_updated_foreign FOREIGN KEY (user_updated) REFERENCES public.directus_users(id);
 
 
 --
