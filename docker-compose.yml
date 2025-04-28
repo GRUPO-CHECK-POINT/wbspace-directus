@@ -9,8 +9,8 @@ services:
         until pg_isready -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER}; do
           sleep 1;
         done;
-        echo 'Conectado. Ejecutando script...';
-        psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_DATABASE} -f /base-directus.sql
+        echo 'Conectado. Ejecutando script en el esquema: ${DB_SEARCH_PATH}';
+        psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_DATABASE} -v schema_name=${DB_SEARCH_PATH} -f /base-directus.sql || { echo 'Error ejecutando el script'; exit 1; }
       "
     volumes:
       - ./base-directus.sql:/base-directus.sql
@@ -32,4 +32,5 @@ services:
       DB_DATABASE: ${DB_DATABASE}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
+      DB_SEARCH_PATH: ${DB_SEARCH_PATH}
       WEBSOCKETS_ENABLED: "true"
