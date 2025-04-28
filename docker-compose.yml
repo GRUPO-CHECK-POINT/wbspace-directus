@@ -9,8 +9,12 @@ services:
         until pg_isready -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER}; do
           sleep 1;
         done;
-        echo 'Conectado. Ejecutando script en el esquema: ${DB_SEARCH_PATH}';
-        psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_DATABASE} -v schema_name=${DB_SEARCH_PATH} -f /base-directus.sql || { echo 'Error ejecutando el script'; exit 1; }
+        echo 'Conectado. Preprocesando script para el esquema: ${DB_SEARCH_PATH}';
+
+        sed \"s/\\bpublic\\b/${DB_SEARCH_PATH}/g\" /base-directus.sql > /base-directus-final.sql;
+
+        echo 'Ejecutando script corregido...';
+        psql -h ${DB_HOST} -p ${DB_PORT} -U ${DB_USER} -d ${DB_DATABASE} -f /base-directus-final.sql || { echo 'Error ejecutando el script'; exit 1; }
       "
     volumes:
       - ./base-directus.sql:/base-directus.sql
